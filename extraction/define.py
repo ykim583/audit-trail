@@ -12,6 +12,15 @@ class OrderStatus(Enum):
     RECONCILED = "감사 최종 완료"
     FAILURE = "자료 오류"
 
+# --- Status transition rules: (current_status, new_status) allowed pairs
+ALLOWED = {
+    (None, "REQUESTED"), # Default
+    ("REQUESTED", "RECEIVED"), # 자료 요청 후 매칭되면 수령
+    ("RECEIVED", "REQUESTED"),   # 자료 재요청 사유 필요
+    ("RECEIVED", "REVIEWED"), # 자료 수령 후 검토 완료
+    ("REQUESTED", "REVIEWED"),   # 이전 수령 이력 있음 + 사유 필수
+}
+
 # --- Path to the workbook to be imported 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ADMIN_DIR = PROJECT_ROOT / "admin"
